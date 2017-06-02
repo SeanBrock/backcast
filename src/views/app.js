@@ -4,17 +4,34 @@ var AppView = Backbone.View.extend({
 
   initialize: function() {
     this.videos = new Videos(window.exampleVideoData);
-    this.render();
+    //this.listenTo(this.videos, 'sync', this.select)//Firs);
+    //this.videos.search('unicorn');
+    this.render();//confirmed in lecture
 
   },
 
+  selectFirst: function () {
+    this.videos.at(0).select();
+  },
 
   render: function() {
     this.$el.html(this.template());
-    this.videoPlayerView = new VideoPlayerView({model: Video});
-    this.videoListView = new VideoListView({model: Video});
-    //console.log(videoPlayerView)
-    //
+
+    new VideoListView({
+      collection: this.videos,
+      el: this.$('.list')
+    }).render();
+
+    new VideoPlayerView({
+      model: this.videos.at(0),
+      collection: this.videos,
+      el: this.$('.player')
+    }).render();
+
+    new SearchView({
+      collection: this.videos,
+      el: this.$('.search')
+    }).render();
     //
     return this;
   },

@@ -1,12 +1,20 @@
 var VideoPlayerView = Backbone.View.extend({
 
-  initialize: function(){
+  initialize: function () {
+    this.listenTo(this.collection, 'select', this.selectVideo);
+  },
+
+  selectVideo: function (selection) {
+    this.model = selection;//could be a problem...
     this.render();
-    //this.collection.on('sync', this.render, this);
   },
 
   render: function() {
-    this.$el.html('<div class="loading">Please wait...</div>');
+    if (this.model) {
+      this.$el.html(this.template(this.model.attributes));
+    } else {
+      this.$el.html('<div class="loading">Please wait...</div>');
+    }
     return this;
   },
 
